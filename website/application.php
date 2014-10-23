@@ -2,10 +2,9 @@
 
     <h1> 1. Choose a model: </h1>
     <div id = 'buttons'>
-		<button onclick="input('SmarterHousing')" type="button">SmarterHousing</button>
-		<button onclick="input('ExampleModel')" type="button">ExampleModel</button>
-		<!--<button onclick="input('Affordable')" type="button">Affordable</button>-->
-    </div>
+		<button onclick="input('SmarterHousing')" type="button">SmarterHousing<img src="images/home-icon.png"></button>
+		<button onclick="input('ExampleModel')" type="button">ExampleModel<img src="images/bar-chart-icon.png"></button>
+		<button onclick="input('Affordable')" type="button">Affordable<img src="images/coin-icon.png"></button>    </div>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
