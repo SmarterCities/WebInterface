@@ -125,58 +125,50 @@ function output(){
 	console.log(variable_values)
 	console.log("call:"+"http://smartercities-api.mybluemix.net/output/"+current_model+variable_values)
 	$.get("http://smartercities-api.mybluemix.net/output/"+current_model+variable_values,{}).then(function(data){
-		//try{
-			//make amCharts
-			console.log("data:")
-			console.log(data);
-			(data.output.amCharts).forEach(function(chart){
-				//console.log(chart.name);
-				//console.log(chart);
-				d3.select("#outputdiv")
-					.append("div")
-					.attr("id",chart.name)
-					.style("width","100%")
-					.style("height","400px")
-					.style("background-color", "lightgray");
+		//make amCharts
+		(data.output.amCharts).forEach(function(chart){
+			d3.select("#outputdiv")
+				.append("div")
+				.attr("id",chart.name)
+				.style("width","100%")
+				.style("height","400px")
+				.style("background-color", "lightgray");
 
-				AmCharts.makeChart(chart.name,chart);
-			});
+			AmCharts.makeChart(chart.name,chart);
+		});
 
-			//make maps
-			(data.output.maps).forEach(function(m){
-				//add the map to the output div
-				d3.select("#outputdiv")
-					.append("div")
-					.style("height", "500px")
-					.attr("id", m.name);
-				
-				//make map visible
-				var map = L.map(m.name).setView([m.view.lat, m.view.lon], m.view.zoom);
-				L.tileLayer('http://{s}.tiles.mapbox.com/v3/seanluciotolentino.jhknj4m5/{z}/{x}/{y}.png', {
-    				//attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-    				maxZoom: 18
+		//make maps
+		(data.output.maps).forEach(function(m){
+			//add the map to the output div
+			d3.select("#outputdiv")
+				.append("div")
+				.style("height", "500px")
+				.attr("id", m.name);
+			
+			//make map visible
+			var map = L.map(m.name).setView([m.view.lat, m.view.lon], m.view.zoom);
+			L.tileLayer('http://{s}.tiles.mapbox.com/v3/seanluciotolentino.jhknj4m5/{z}/{x}/{y}.png', {
+				attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+				maxZoom: 18
+			}).addTo(map);
+
+			//add circles
+			(m.circles).forEach(function(c){
+				console.log(c)
+				L.circle([c.lat, c.lon], c.radius, {
+				    color: c.color,
+				    fillColor: c.fillColor,
+				    fillOpacity: c.fillOpacity
 				}).addTo(map);
-
-				//add circles
-				(m.circles).forEach(function(c){
-					console.log(c)
-					L.circle([c.lat, c.lon], c.radius, {
-					    color: c.color,
-					    fillColor: c.fillColor,
-					    fillOpacity: c.fillOpacity
-					}).addTo(map);
-				});
-
-				//add markers
-				(m.markers).forEach(function(marker){
-					L.marker([marker.lat, marker.lon]).addTo(map)
-							.bindPopup(marker.text)
-				});
-
 			});
-		//}catch(err){
-		//	console.log("ERROR IN API CALL: "+err)
-		//}
+
+			//add markers
+			(m.markers).forEach(function(marker){
+				L.marker([marker.lat, marker.lon]).addTo(map)
+						.bindPopup(marker.text)
+			});
+
+		});
 	});
 }
 
