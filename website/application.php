@@ -2,9 +2,10 @@
 
     <h1> 1. Choose a model: </h1>
     <div id = 'buttons'>
-		<button onclick="input('SmarterHousing')" type="button">SmarterHousing<img src="images/home-icon.png"></button>
 		<button onclick="input('ExampleModel')" type="button">ExampleModel<img src="images/bar-chart-icon.png"></button>
+		<button onclick="input('SmarterHousing')" type="button">SmarterHousing<img src="images/home-icon.png"></button>
 		<button onclick="input('311Messages')" type="button">311 Service Requests<img src="images/coin-icon.png"></button>
+		<button onclick="input('CityPulse')" type="button">CityPulse<img src="images/heart-pulse-icon.png"</button>
 	</div>
    
 	
@@ -99,6 +100,33 @@ function input(model) {
 			 	});
 		}); //entries
 
+		//for each dropdown menu in data JSON make a dropdown menu
+		(data.dropdowns).forEach(function(dropdown){
+			//add the title
+			d3.select("div#inputdiv")
+			 	.append("p")
+			 	.html(dropdown.name + " : ");
+			//add the dropdown
+			d3.select("div#inputdiv")
+			 	.append("select")
+			 	.attr("class", "dropdown")
+			 	.attr("name", dropdown.name)
+			 	//.attr("value", dropdown.values[0])
+			 	.attr("id", dropdown.name);
+			//add each value of the dropdown
+			(dropdown.values).forEach(function(value){
+				d3.select("select#"+dropdown.name)
+					.append("option")
+					.attr("value", value)
+					.html(value)
+					.on("select", function(v){
+						d3.select("#"+dropdown.name)
+						.html(v)
+						.attr("value", this.value);
+					});
+			})
+		});
+
 
 	}); //api call
 }; //input function
@@ -114,12 +142,18 @@ function output(){
 	var sliders = d3.selectAll(".slider")[0]
 	sliders.forEach(function(slider){
 		variable_values=variable_values+slider.getAttribute("name")+"="+slider.getAttribute("value")+"&";
-	})
+	});
 	//entries
 	var entries = d3.selectAll(".entry")[0]
 	entries.forEach(function(entry){
 		variable_values=variable_values+entry.getAttribute("name")+"="+entry.getAttribute("value")+"&";
-	})
+	});
+	//dropdowns
+	var dropdowns = d3.selectAll(".dropdown")[0]
+	dropdowns.forEach(function(dropdown){
+		variable_values=variable_values+dropdown.getAttribute("name")+"="+dropdown.selectedOptions[0].getAttribute("value").replace(" ", "")+"&";
+	});
+
 
 	//make the vall with the parameter values:
 	console.log(variable_values)
@@ -169,6 +203,13 @@ function output(){
 			});
 
 		});
+
+		//make texts -- for testing
+		(data.output.text).forEach(function(t){
+			d3.select("#outputdiv")
+				.append("p")
+				.html(t);
+		})
 	});
 }
 
