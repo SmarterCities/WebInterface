@@ -127,6 +127,13 @@ function input(model) {
 			})
 		});
 
+		//add labels
+		(data.labels).forEach(function(label){
+			d3.select("div#inputdiv")
+			 	.append("p")
+			 	.html(label);
+		});
+
 
 	}); //api call
 }; //input function
